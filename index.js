@@ -3,7 +3,31 @@ const morgan = require("morgan");
 const generateId = require("./helpers").generateId;
 const app = express();
 app.use(express.json());
-app.use(morgan("tiny"));
+app.use(
+  morgan("tiny", {
+    skip: (req, res) => req.method === "POST",
+  })
+);
+
+app.use(
+  morgan(
+    (tokens, req, res) => {
+      return [
+        tokens.method(req, res),
+        tokens.url(req, res),
+        tokens.status(req, res),
+        tokens.res(req, res, "content-length"),
+        "-",
+        tokens["response-time"](req, res),
+        "ms",
+        JSON.stringify(req.body),
+      ].join(" ");
+    },
+    {
+      skip: (req, res) => req.method !== "POST",
+    }
+  )
+);
 
 app.listen(3001, () => console.log("Server is running on port 3001"));
 
