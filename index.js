@@ -4,7 +4,7 @@ app.use(express.json());
 
 app.listen(3001, () => console.log("Server is running on port 3001"));
 
-const data = [
+let data = [
   {
     id: 1,
     name: "Arto Hellas",
@@ -39,6 +39,17 @@ app.get("/api/persons/:id", (req, res) => {
   }
 
   res.json(person);
+});
+
+app.delete("/api/persons/:id", (req, res) => {
+  const { id } = req.params;
+  const person = data.find((p) => p.id == id);
+  if (!person) {
+    return res.status(404).end();
+  }
+
+  data = data.filter((p) => p != person);
+  res.status(204).end();
 });
 
 app.get("/info/", (req, res) => {
