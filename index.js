@@ -1,4 +1,5 @@
 const express = require("express");
+const generateId = require("./helpers").generateId;
 const app = express();
 app.use(express.json());
 
@@ -38,6 +39,28 @@ app.get("/api/persons/:id", (req, res) => {
     return res.status(404).end();
   }
 
+  res.json(person);
+});
+
+app.post("/api/persons/", (req, res) => {
+  const body = req.body;
+  if (!body.name || !body.number) {
+    return res.status(400).json({
+      error: "make sure you have submited a valid name and number",
+    });
+  } else if (data.some((p) => p.name.toLowerCase() == body.name.toLowerCase())) {
+    return res.status(400).json({
+      error: "name must be unique",
+    });
+  }
+
+  const person = {
+    id: generateId(data),
+    name: body.name,
+    number: body.number,
+  };
+
+  data.push(person);
   res.json(person);
 });
 
