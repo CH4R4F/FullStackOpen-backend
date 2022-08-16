@@ -1,7 +1,10 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const generateId = require("./helpers").generateId;
 const app = express();
+
+app.use(cors());
 app.use(express.json());
 app.use(
   morgan("tiny", {
@@ -28,8 +31,6 @@ app.use(
     }
   )
 );
-
-app.listen(3001, () => console.log("Server is running on port 3001"));
 
 let data = [
   {
@@ -106,4 +107,9 @@ app.get("/info/", (req, res) => {
     <p>Phonebook has info for ${data.length} people</p>
     <p>${new Date()}</p> 
   `);
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
